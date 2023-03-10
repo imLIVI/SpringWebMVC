@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostRepositoryStubImpl implements PostRepository {
@@ -14,7 +15,9 @@ public class PostRepositoryStubImpl implements PostRepository {
     private int counter = 1;
 
     public List<Post> all() {
-        return postsList;
+        return postsList.stream()
+                .filter(post -> !post.getRemovedFlag())
+                .collect(Collectors.toList());
     }
 
     public Optional<Post> getById(long id) {
@@ -37,16 +40,20 @@ public class PostRepositoryStubImpl implements PostRepository {
         return post;
     }
 
-    public void removeById(long id) {
+    public boolean removeById(long id) {
         Post searchingPost = findById(id);
         if (searchingPost != null) {
-            postsList.remove(searchingPost);
+            searchingPost.setRemovedFlag(true);
+            postsList.set(postsList.indexOf(searchingPost), searchingPost);
+            return true;
         }
+        return false;
     }
 
     public Post findById(long id) {
         return postsList.stream()
                 .filter(p -> p.getId() == id)
+                .filter(p -> !p.getRemovedFlag())
                 .findFirst()
                 .orElse(null);
     }

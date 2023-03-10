@@ -3,6 +3,7 @@ package ru.netology.model;
 public class Post {
     private long id;
     private String content;
+    private boolean removedFlag;
 
     public Post() {
     }
@@ -26,5 +27,13 @@ public class Post {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean getRemovedFlag() {
+        return removedFlag;
+    }
+
+    public void setRemovedFlag(boolean removedFlag) {
+        this.removedFlag = removedFlag;
     }
 }
